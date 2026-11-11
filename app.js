@@ -103,8 +103,23 @@ function projectDocuments(project) {
   const external = element('a', '', 'PDF 전체 화면 ↗');
   external.target = '_blank';
   external.rel = 'noopener';
-  const frame = element('iframe');
+  const toolbar = element('div', 'pdf-toolbar');
+  const back = element('button', 'control', '←');
+  const forward = element('button', 'control', '→');
+  back.setAttribute('aria-label', 'PDF 이전 페이지');
+  forward.setAttribute('aria-label', 'PDF 다음 페이지');
+  const pageLabel = element('output');
+  const status = element('p', 'pdf-status');
+  status.setAttribute('role', 'status');
+  const surface = element('div', 'pdf-surface');
+  toolbar.append(back, pageLabel, forward);
   let selected = 0;
+  let page = 1;
+  let documentPromise;
+  let revision = 0;
+  let loaded = -1;
+  back.addEventListener('click', () => { page--; renderPage(); });
+  forward.addEventListener('click', () => { page++; renderPage(); });
   const buttons = project.docs.map((doc, index) => {
     const button = element('button', '', doc.title);
     button.type = 'button';
@@ -119,15 +134,54 @@ function projectDocuments(project) {
     const doc = project.docs[selected];
     buttons.forEach((button, index) => button.setAttribute('aria-pressed', String(index === selected)));
     external.href = doc.path;
-    frame.title = project.title + ' ' + doc.title;
-    if (frame.getAttribute('src') !== doc.path) frame.src = doc.path;
+    if (loaded !== selected) {
+      loaded = selected;
+      page = 1;
+      documentPromise = import('./pdf.min.mjs').then(pdf => {
+        pdf.GlobalWorkerOptions.workerSrc = new URL('pdf.worker.min.mjs', location.href).href;
+        return pdf.getDocument({url: doc.path, useSystemFonts: true, useWasm: false}).promise;
+      });
+    }
+    renderPage();
+  }
+  async function renderPage() {
+    const request = ++revision;
+    back.disabled = forward.disabled = true;
+    status.textContent = 'PDF를 불러오는 중입니다.';
+    try {
+      const pdf = await documentPromise;
+      if (request !== revision) return;
+      const sheet = await pdf.getPage(page);
+      if (request !== revision) return;
+      const width = Math.min(1080, Math.max(280, surface.clientWidth - 24));
+      const initial = sheet.getViewport({scale: 1});
+      const ratio = Math.min(devicePixelRatio || 1, 2);
+      const viewport = sheet.getViewport({scale: width / initial.width * ratio});
+      const canvas = element('canvas');
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+      canvas.style.width = width + 'px';
+      canvas.setAttribute('aria-label', project.docs[selected].title + ' ' + page + '페이지');
+      await sheet.render({canvas, viewport}).promise;
+      if (request !== revision) return;
+      surface.replaceChildren(canvas);
+      pageLabel.value = page + ' / ' + pdf.numPages;
+      back.disabled = page === 1;
+      forward.disabled = page === pdf.numPages;
+      status.textContent = '';
+    } catch (error) {
+      if (request !== revision) return;
+      surface.replaceChildren();
+      status.textContent = '미리보기를 열 수 없습니다. PDF 전체 화면 링크를 이용해 주세요.';
+      console.error(error);
+    }
   }
   details.addEventListener('toggle', () => {
     summary.textContent = details.open ? '기획서 접기' : '더보기 · 기획서 PDF';
     if (details.open) showDocument();
   });
   header.append(tabs, external);
-  reader.append(header, frame);
+  reader.append(header, toolbar, status, surface);
   details.append(summary, reader);
   return details;
 }

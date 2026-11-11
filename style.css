@@ -94,7 +94,12 @@ h1 { font-size: clamp(3.1rem, 8.6vw, 8.3rem); line-height: 1.01; margin: 0; lett
 .doc-tabs button { padding: 6px 9px; }
 .doc-tabs button[aria-pressed="true"] { background: var(--tint); font-weight: 700; }
 .reader-head a { font-size: .82rem; white-space: nowrap; }
-.reader iframe { display: block; width: 100%; height: min(76vh, 900px); border: 1px solid var(--line); background: white; }
+.pdf-toolbar { display: flex; justify-content: center; align-items: center; gap: 12px; padding: 9px; border: 1px solid var(--line); }
+.pdf-toolbar output { min-width: 4.6em; text-align: center; font-variant-numeric: tabular-nums; }
+.pdf-status { margin: 8px 0; color: var(--quiet); }
+.pdf-status:empty { display: none; }
+.pdf-surface { overflow: auto; max-height: min(76vh, 900px); background: var(--tint); text-align: center; }
+.pdf-surface canvas { display: block; max-width: 100%; height: auto; margin: 10px auto; background: white; }
 .play { display: inline-block; margin: 10px 0 0; font-size: .9rem; color: var(--green); }
 .source-links { padding: 42px var(--gutter); border-bottom: 1px solid var(--line); }
 .source-links h2 { margin: 0 0 14px; font-size: 1.35rem; }
@@ -114,7 +119,7 @@ footer { border-bottom: 0; }
   .panel { grid-template-columns: 1fr; align-content: start; }
   .media { min-height: 110px; }
   .image-button img { max-height: 340px; }
-  .reader iframe { height: 64vh; }
+  .pdf-surface { max-height: 64vh; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

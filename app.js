@@ -223,6 +223,13 @@ projects.forEach((project, index) => {
     play.rel = 'noopener';
     section.append(play);
   }
+  if (project.workbook) {
+    const workbook = element('a', 'play', 'Animyth 데이터 원본 엑셀 보기 ↗');
+    workbook.href = project.workbook;
+    workbook.target = '_blank';
+    workbook.rel = 'noopener noreferrer';
+    section.append(workbook);
+  }
   section.append(projectDocuments(project));
   list.append(section);
 });

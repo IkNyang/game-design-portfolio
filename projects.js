@@ -339,6 +339,16 @@ const projects = [
           "레벨 및 체력, 전투 시작, 상점과 시너지 정보를 한 화면에 배치했습니다.",
           "시너지 활성화 단계와 조건을 구분하고, 상세 정보를 열어 다음 기물 선택에 필요한 내용을 확인하도록 설계했습니다."
         ]
+      },
+      {
+        "title": "기물 능력치 데이터 테이블",
+        "images": [
+          "images-animyth-unit-stats.png"
+        ],
+        "text": [
+          "엑셀의 기물 능력치 시트 중 A1:H7을 발췌했습니다.",
+          "기물별 비용과 시너지, 체력, 공격력, 공격속도를 한 행에서 비교할 수 있도록 정리했습니다."
+        ]
       }
     ],
     "docs": [
@@ -346,7 +356,8 @@ const projects = [
         "path": "pdf-animyth.pdf",
         "title": "UI 기획서"
       }
-    ]
+    ],
+    "workbook": "https://drive.google.com/file/d/1367eyuHs9aFshwV2400f9IHmdMVZnrhC/view"
   },
   {
     "id": "shepherd",

@@ -25,11 +25,14 @@ button { font: inherit; cursor: pointer; }
 .email, footer { font-size: .85rem; color: var(--quiet); }
 main { max-width: 1520px; margin-inline: auto; }
 .intro {
-  display: grid; grid-template-columns: 1.15fr 1fr; align-items: end; gap: 42px;
-  padding: clamp(55px, 10vw, 142px) var(--gutter) clamp(54px, 8vw, 112px);
+  display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  align-items: center; gap: clamp(28px, 5vw, 76px);
+  padding: clamp(60px, 10vw, 142px) var(--gutter) clamp(54px, 8vw, 112px);
 }
-h1 { font-size: clamp(3.1rem, 8.6vw, 8.3rem); line-height: 1.01; margin: 0; letter-spacing: -.075em; }
-.intro-aside > p { color: var(--green); font-weight: 700; }
+h1 { font-size: clamp(1.65rem, 3.75vw, 3.9rem); line-height: 1.22; margin: 0; letter-spacing: -.06em; font-weight: 500; word-break: keep-all; }
+h1 strong { color: var(--green); font-weight: 800; }
+.intro-copy p { margin: 22px 0 0; color: var(--quiet); font-size: clamp(.95rem, 1.45vw, 1.12rem); line-height: 1.7; word-break: keep-all; }
+.intro-aside h2 { margin: 0 0 12px; color: var(--green); font-size: .9rem; font-weight: 700; }
 .contents { border-top: 1px solid var(--line); }
 .contents a {
   display: grid; grid-template-columns: 2.4em 1fr auto; gap: 8px;
